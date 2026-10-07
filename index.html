@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Pembelajaran Kosakata TOCFL Band A1</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #a8edd9 0%, #fed6e3 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --primary-color: #0c7b93;
+      --secondary-color: #1089ff;
+      --accent-color: #ff7e67;
+      --text-color: #2f3542;
+      --success-color: #20bf6b;
+      --error-color: #eb3b5a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text-color);
+    }
+
+    .container {
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 480px;
+      padding: 30px 25px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .header-title {
+      margin-bottom: 20px;
+    }
+
+    .header-title h1 {
+      color: var(--primary-color);
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: #778ca3;
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      background: #f1f2f6;
+      padding: 5px;
+      border-radius: 16px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: #778ca3;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--primary-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Flashcard Section */
+    .flashcard-section {
+      display: block;
+    }
+
+    .card-scene {
+      width: 100%;
+      height: 250px;
+      perspective: 1000px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      border-radius: 20px;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, #1089ff 0%, #05c46b 100%);
+      color: #ffffff;
+    }
+
+    .card-back {
+      background: #ffffff;
+      color: var(--text-color);
+      border: 2px solid #f1f2f6;
+      transform: rotateY(180deg);
+    }
+
+    .hanzi-big {
+      font-size: 75px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+      margin-bottom: 5px;
+    }
+
+    .hint-text {
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 4px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .pinyin-detail {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+
+    .meaning-detail {
+      font-size: 16px;
+      color: #4b6584;
+      background: #f1f2f6;
+      padding: 10px 15px;
+      border-radius: 12px;
+      width: 100%;
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .ctrl-btn {
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex: 1;
+    }
+
+    .ctrl-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Quiz Section */
+    .quiz-section {
+      display: none;
+    }
+
+    .quiz-card {
+      background: #f8f9fa;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e9ecef;
+    }
+
+    .quiz-hanzi {
+      font-size: 60px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .opt-btn {
+      background: #ffffff;
+      border: 1px solid #dcdde1;
+      padding: 12px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-color);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .opt-btn:hover {
+      border-color: var(--secondary-color);
+      background: #f1f2f6;
+    }
+
+    .opt-btn.correct { background: #d4edda; border-color: var(--success-color); color: #155724; }
+    .opt-btn.wrong { background: #f8d7da; border-color: var(--error-color); color: #721c24; }
+
+    .score-badge {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-title">
+      <h1>Media Pembelajaran TOCFL Band A1</h1>
+      <p>Modul Flashcard & Evaluasi Kosakata Mandarin</p>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tab-card" onclick="switchTab('card')">🎴 Flashcard Hanzi</button>
+      <button class="tab-btn" id="tab-quiz" onclick="switchTab('quiz')">✍️ Evaluasi Pemahaman</button>
+    </div>
+
+    <!-- MODE 1: FLASHCARD -->
+    <div id="flashcard-section" class="flashcard-section">
+      <div class="card-scene" onclick="flipCard()">
+        <div class="card-inner" id="card-inner">
+          <div class="card-face card-front">
+            <div class="hanzi-big" id="card-hanzi">你好</div>
+            <div class="hint-text">Klik kartu untuk melihat Pinyin & Arti</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="pinyin-detail" id="card-pinyin">nǐ hǎo</div>
+            <div class="meaning-detail" id="card-meaning">Halo / Apa kabar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" onclick="prevCard()">⬅️ Sebelumnya</button>
+        <button class="ctrl-btn" style="background: var(--accent-color);" onclick="randomCard()">🎲 Acak</button>
+        <button class="ctrl-btn" onclick="nextCard()">Selanjutnya ➡️</button>
+      </div>
+      <div style="margin-top: 15px; font-size: 12px; color: #a4b0be;" id="card-index">Kartu 1 dari 20</div>
+    </div>
+
+    <!-- MODE 2: QUIZ -->
+    <div id="quiz-section" class="quiz-section">
+      <div class="quiz-card">
+        <div style="font-size: 12px; color: #a4b0be; margin-bottom: 5px;" id="quiz-progress">Soal 1 dari 20</div>
+        <div class="quiz-hanzi" id="quiz-hanzi">你好</div>
+        <div style="font-size: 13px; color: #778ca3;">Pilih Pinyin dan arti yang tepat untuk Karakter di atas:</div>
+      </div>
+
+      <div class="options-grid" id="options-container"></div>
+      <div class="score-badge" id="quiz-score" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script>
+    const tocflList = [
+      { hanzi: "你好", pinyin: "nǐ hǎo", meaning: "Halo / Apa kabar" },
+      { hanzi: "謝謝", pinyin: "xiè xie", meaning: "Terima kasih" },
+      { hanzi: "不客氣", pinyin: "bú kè qi", meaning: "Sama-sama" },
+      { hanzi: "再見", pinyin: "zài jiàn", meaning: "Sampai jumpa" },
+      { hanzi: "老師", pinyin: "lǎo shī", meaning: "Guru" },
+      { hanzi: "學生", pinyin: "xué shēng", meaning: "Siswa / Murid" },
+      { hanzi: "朋友", pinyin: "péng yǒu", meaning: "Teman" },
+      { hanzi: "什麼", pinyin: "shén me", meaning: "Apa" },
+      { hanzi: "名字", pinyin: "míng zi", meaning: "Nama" },
+      { hanzi: "家", pinyin: "jiā", meaning: "Rumah / Keluarga" },
+      { hanzi: "漂亮", pinyin: "piào liang", meaning: "Cantik / Indah" },
+      { hanzi: "喜歡", pinyin: "xǐ huān", meaning: "Suka" },
+      { hanzi: "喝茶", pinyin: "hē chá", meaning: "Minum teh" },
+      { hanzi: "吃飯", pinyin: "chī fàn", meaning: "Makan nasi" },
+      { hanzi: "買東西", pinyin: "mǎi dōng xi", meaning: "Berbelanja" },
+      { hanzi: "多少錢", pinyin: "duō shǎo qián", meaning: "Berapa harga" },
+      { hanzi: "今天", pinyin: "jīn tiān", meaning: "Hari ini" },
+      { hanzi: "明天", pinyin: "míng tiān", meaning: "Besok" },
+      { hanzi: "昨天", pinyin: "zuó tiān", meaning: "Kemarin" },
+      { hanzi: "很高興", pinyin: "hěn gāo xìng", meaning: "Sangat senang" }
+    ];
+
+    let currentCardIndex = 0;
+    let quizIndex = 0;
+    let score = 0;
+    let canAnswer = true;
+    let shuffledQuiz = [];
+
+    // Flashcard Functions
+    function updateCard() {
+      const item = tocflList[currentCardIndex];
+      document.getElementById('card-hanzi').innerText = item.hanzi;
+      document.getElementById('card-pinyin').innerText = item.pinyin;
+      document.getElementById('card-meaning').innerText = item.meaning;
+      document.getElementById('card-index').innerText = `Kartu ${currentCardIndex + 1} dari ${tocflList.length}`;
+      document.getElementById('card-inner').classList.remove('is-flipped');
+    }
+
+    function flipCard() {
+      document.getElementById('card-inner').classList.toggle('is-flipped');
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % tocflList.length;
+      updateCard();
+    }
+
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + tocflList.length) % tocflList.length;
+      updateCard();
+    }
+
+    function randomCard() {
+      currentCardIndex = Math.floor(Math.random() * tocflList.length);
+      updateCard();
+    }
+
+    // Switch Tab
+    function switchTab(tab) {
+      if (tab === 'card') {
+        document.getElementById('flashcard-section').style.display = 'block';
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('tab-card').classList.add('active');
+        document.getElementById('tab-quiz').classList.remove('active');
+      } else {
+        document.getElementById('flashcard-section').style.display = 'none';
+        document.getElementById('quiz-section').style.display = 'block';
+        document.getElementById('tab-quiz').classList.add('active');
+        document.getElementById('tab-card').classList.remove('active');
+        startQuiz();
+      }
+    }
+
+    // Quiz Functions
+    function startQuiz() {
+      shuffledQuiz = [...tocflList].sort(() => 0.5 - Math.random());
+      quizIndex = 0;
+      score = 0;
+      document.getElementById('quiz-score').style.display = 'none';
+      loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+      canAnswer = true;
+      const q = shuffledQuiz[quizIndex];
+      document.getElementById('quiz-progress').innerText = `Soal ${quizIndex + 1} dari ${shuffledQuiz.length}`;
+      document.getElementById('quiz-hanzi').innerText = q.hanzi;
+
+      const wrongOpts = tocflList.filter(k => k.hanzi !== q.hanzi).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const options = [q, ...wrongOpts].sort
