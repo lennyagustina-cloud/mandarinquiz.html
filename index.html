@@ -3,338 +3,357 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Evaluasi Mandarin TOCFL Band A1</title>
+  <title>TOCFL A1 Mandarin Academic Module</title>
   <style>
     :root {
-      --primary-red: #8B0000;
-      --accent-gold: #D4AF37;
-      --bg-color: #2B0A0A;
-      --surface-bg: #FFFFFF;
-      --text-dark: #1A1A1A;
-      --text-muted: #555555;
-      --card-border: #E8D8B8;
-      --success-green: #2E7D32;
-      --error-red: #C62828;
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+      --border-glow: rgba(6, 182, 212, 0.3);
+      --success: #10b981;
+      --error: #ef4444;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
     body {
-      background: radial-gradient(circle at center, #3A0D0D 0%, #1A0505 100%);
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-dark) 70%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      color: var(--text-dark);
+      padding: 16px;
+      color: var(--text-main);
     }
 
-    .app-card {
-      background: var(--surface-bg);
-      border-top: 5px solid var(--accent-gold);
-      border-radius: 12px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    .dashboard-container {
       width: 100%;
-      max-width: 480px;
-      padding: 28px 24px;
+      max-width: 460px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
-    .app-header {
-      text-align: center;
-      border-bottom: 2px dashed #E0E0E0;
-      padding-bottom: 16px;
+    /* Top Bar Header */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+
+    .mode-pills {
+      display: flex;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 4px;
+      border-radius: 30px;
+    }
+
+    .pill-btn {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .pill-btn.active {
+      background: var(--accent-cyan);
+      color: #0f172a;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Progress Bar */
+    .progress-box {
       margin-bottom: 20px;
     }
 
-    .app-header h1 {
-      color: var(--primary-red);
-      font-size: 22px;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-
-    .app-header p {
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
       font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
     }
 
-    /* Tab Switcher */
-    .tab-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      background: #F4F0EA;
-      padding: 4px;
-      border-radius: 8px;
-      margin-bottom: 24px;
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
     }
 
-    .tab-item {
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: transparent;
-      color: var(--text-muted);
-      transition: all 0.2s ease;
+    .progress-fill {
+      height: 100%;
+      width: 5%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      transition: width 0.3s ease;
     }
 
-    .tab-item.active {
-      background: var(--primary-red);
-      color: #FFFFFF;
-      box-shadow: 0 2px 6px rgba(139, 0, 0, 0.3);
-    }
-
-    /* Flashcard View */
-    .flashcard-wrapper {
+    /* Flashcard Screen */
+    .fc-screen {
       display: block;
     }
 
-    .flashcard-box {
+    .main-card {
       width: 100%;
-      height: 240px;
+      height: 250px;
       perspective: 1000px;
       margin-bottom: 20px;
       cursor: pointer;
     }
 
-    .flashcard-inner {
+    .card-3d {
       width: 100%;
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.5s ease;
-      border-radius: 12px;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 16px;
     }
 
-    .flashcard-inner.flipped {
+    .card-3d.flipped {
       transform: rotateY(180deg);
     }
 
-    .flashcard-side {
+    .card-face {
       position: absolute;
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 12px;
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      border: 2px solid var(--card-border);
+      border: 1px solid var(--border-glow);
+      box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.05);
     }
 
-    .flashcard-front {
-      background: #FAF8F5;
-      color: var(--primary-red);
+    .card-front {
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
     }
 
-    .flashcard-back {
-      background: #FFFFFF;
+    .card-back {
+      background: radial-gradient(circle at center, #2e1065 0%, #0f172a 100%);
       transform: rotateY(180deg);
+      border-color: rgba(139, 92, 246, 0.4);
     }
 
-    .hanzi-text {
-      font-size: 68px;
-      font-weight: 700;
-      line-height: 1.1;
+    .hanzi-display {
+      font-size: 72px;
+      font-weight: 800;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .click-hint {
-      font-size: 11px;
-      color: #999;
+    .tap-text {
       margin-top: 15px;
-      border: 1px solid #DDD;
-      padding: 3px 10px;
-      border-radius: 12px;
+      font-size: 11px;
+      color: var(--accent-cyan);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
-    .pinyin-text {
-      font-size: 24px;
+    .pinyin-display {
+      font-size: 26px;
       font-weight: 700;
-      color: var(--primary-red);
-      margin-bottom: 10px;
+      color: #a7f3d0;
+      margin-bottom: 8px;
     }
 
-    .meaning-text {
+    .meaning-display {
       font-size: 15px;
-      color: var(--text-dark);
-      background: #F4F0EA;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 500;
+      color: var(--text-main);
+      text-align: center;
     }
 
-    .action-group {
+    /* Control Buttons */
+    .controls-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .btn-action {
+    .btn-nav {
       flex: 1;
-      padding: 10px;
-      border: 1px solid var(--primary-red);
-      background: #FFFFFF;
-      color: var(--primary-red);
-      font-weight: 600;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      border-radius: 12px;
       font-size: 13px;
-      border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .btn-action:hover {
-      background: var(--primary-red);
-      color: #FFFFFF;
+    .btn-nav:hover {
+      background: var(--accent-cyan);
+      color: #0f172a;
+      border-color: var(--accent-cyan);
     }
 
-    .btn-action.gold {
-      border-color: var(--accent-gold);
-      color: #8A6D0B;
-    }
-
-    .btn-action.gold:hover {
-      background: var(--accent-gold);
-      color: #FFFFFF;
-    }
-
-    /* Quiz View */
-    .quiz-wrapper {
+    /* Quiz Screen */
+    .qz-screen {
       display: none;
     }
 
-    .quiz-box {
-      background: #FAF8F5;
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 20px;
+    .qz-question-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
       text-align: center;
       margin-bottom: 16px;
     }
 
-    .quiz-hanzi {
-      font-size: 56px;
+    .qz-hanzi {
+      font-size: 54px;
       font-weight: 700;
-      color: var(--primary-red);
+      color: #ffffff;
     }
 
-    .options-list {
+    .qz-grid {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .btn-option {
-      padding: 12px 16px;
-      border: 1px solid #E0E0E0;
-      background: #FFFFFF;
-      border-radius: 6px;
+    .qz-option-btn {
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 12px;
+      color: var(--text-main);
       font-size: 14px;
       text-align: left;
-      font-weight: 500;
-      color: var(--text-dark);
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .btn-option:hover {
-      border-color: var(--primary-red);
-      background: #FAF8F5;
+    .qz-option-btn:hover {
+      border-color: var(--accent-purple);
+      background: rgba(139, 92, 246, 0.15);
     }
 
-    .btn-option.correct {
-      background: #E8F5E9;
-      border-color: var(--success-green);
-      color: var(--success-green);
-      font-weight: 700;
+    .qz-option-btn.correct {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--success);
+      color: #6ee7b7;
     }
 
-    .btn-option.wrong {
-      background: #FFEBEE;
-      border-color: var(--error-red);
-      color: var(--error-red);
+    .qz-option-btn.wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--error);
+      color: #fca5a5;
     }
 
-    .result-box {
+    .summary-card {
       text-align: center;
-      padding: 20px 0;
+      padding: 30px 10px;
     }
 
-    .result-score {
-      font-size: 20px;
+    .summary-score {
+      font-size: 24px;
       font-weight: 700;
-      color: var(--primary-red);
-      margin-bottom: 16px;
+      color: var(--accent-cyan);
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div class="app-card">
-    <div class="app-header">
-      <h1>TOCFL Band A1 Mandarin</h1>
-      <p>Modul Flashcard &amp; Evaluasi Akademik</p>
+  <div class="dashboard-container">
+    <!-- Top Header -->
+    <div class="top-bar">
+      <div class="brand-title">TOCFL A1 • MANDARIN</div>
+      <div class="mode-pills">
+        <button class="pill-btn active" id="btn-mode-fc" onclick="switchMode('fc')">Kartu</button>
+        <button class="pill-btn" id="btn-mode-qz" onclick="switchMode('qz')">Kuis</button>
+      </div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="tab-container">
-      <button class="tab-item active" id="tab-fc" onclick="setMode('fc')">Flashcard</button>
-      <button class="tab-item" id="tab-qz" onclick="setMode('qz')">Evaluasi Kuis</button>
+    <!-- Progress Indicator -->
+    <div class="progress-box">
+      <div class="progress-info">
+        <span id="progress-text">Kemajuan Pembelajaran</span>
+        <span id="counter-text">1 / 20</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-bar"></div>
+      </div>
     </div>
 
-    <!-- FLASHCARD MODE -->
-    <div id="fc-mode" class="flashcard-wrapper">
-      <div class="flashcard-box" onclick="toggleCard()">
-        <div class="flashcard-inner" id="fc-inner">
-          <div class="flashcard-side flashcard-front">
-            <div class="hanzi-text" id="fc-hanzi">你好</div>
-            <div class="click-hint">Klik untuk Membalik</div>
+    <!-- FLASHCARD VIEW -->
+    <div id="fc-screen" class="fc-screen">
+      <div class="main-card" onclick="flipCard()">
+        <div class="card-3d" id="card-3d">
+          <div class="card-face card-front">
+            <div class="hanzi-display" id="fc-hanzi">你好</div>
+            <div class="tap-text">Ketuk untuk detail ➔</div>
           </div>
-          <div class="flashcard-side flashcard-back">
-            <div class="pinyin-text" id="fc-pinyin">nǐ hǎo</div>
-            <div class="meaning-text" id="fc-meaning">Halo / Apa kabar</div>
+          <div class="card-face card-back">
+            <div class="pinyin-display" id="fc-pinyin">nǐ hǎo</div>
+            <div class="meaning-display" id="fc-meaning">Halo / Apa kabar</div>
           </div>
         </div>
       </div>
 
-      <div class="action-group">
-        <button class="btn-action" onclick="prevCard()">Kembali</button>
-        <button class="btn-action gold" onclick="randomCard()">Acak</button>
-        <button class="btn-action" onclick="nextCard()">Lanjut</button>
+      <div class="controls-row">
+        <button class="btn-nav" onclick="prevCard()">◄ Prev</button>
+        <button class="btn-nav" style="border-color: var(--accent-purple);" onclick="randomCard()">🎲 Acak</button>
+        <button class="btn-nav" onclick="nextCard()">Next ►</button>
       </div>
-      <div style="text-align: center; font-size: 12px; color: #888; margin-top: 12px;" id="fc-counter">1 / 20</div>
     </div>
 
-    <!-- QUIZ MODE -->
-    <div id="qz-mode" class="quiz-wrapper">
-      <div id="qz-content">
-        <div class="quiz-box">
-          <div style="font-size: 11px; color: #888; margin-bottom: 4px;" id="qz-progress">Soal 1 / 20</div>
-          <div class="quiz-hanzi" id="qz-hanzi">你好</div>
+    <!-- QUIZ VIEW -->
+    <div id="qz-screen" class="qz-screen">
+      <div id="qz-body">
+        <div class="qz-question-card">
+          <div class="qz-hanzi" id="qz-hanzi">你好</div>
         </div>
-
-        <div class="options-list" id="qz-options"></div>
+        <div class="qz-grid" id="qz-options"></div>
       </div>
 
-      <div class="result-box" id="qz-result" style="display: none;">
-        <div class="result-score" id="qz-score-text"></div>
-        <button class="btn-action" onclick="initQuiz()">Ulangi Evaluasi</button>
+      <div class="summary-card" id="qz-summary" style="display: none;">
+        <div class="summary-score" id="qz-score-display"></div>
+        <button class="btn-nav" style="width: 100%;" onclick="initQuiz()">Mulai Ulang Kuis</button>
       </div>
     </div>
   </div>
 
   <script>
-    const dataList = [
+    const dataset = [
       { hanzi: "你好", pinyin: "nǐ hǎo", meaning: "Halo / Apa kabar" },
       { hanzi: "謝謝", pinyin: "xiè xie", meaning: "Terima kasih" },
       { hanzi: "不客氣", pinyin: "bú kè qi", meaning: "Sama-sama" },
@@ -352,118 +371,126 @@
       { hanzi: "買東西", pinyin: "mǎi dōng xi", meaning: "Berbelanja" },
       { hanzi: "多少錢", pinyin: "duō shǎo qián", meaning: "Berapa harga" },
       { hanzi: "今天", pinyin: "jīn tiān", meaning: "Hari ini" },
-      { hanzi: "Wait...", pinyin: "míng tiān", meaning: "Besok" },
       { hanzi: "明天", pinyin: "míng tiān", meaning: "Besok" },
       { hanzi: "昨天", pinyin: "zuó tiān", meaning: "Kemarin" },
       { hanzi: "很高興", pinyin: "hěn gāo xìng", meaning: "Sangat senang" }
-    ].filter(item => item.hanzi !== "Wait...");
+    ];
 
-    let cardIdx = 0;
-    let quizIdx = 0;
-    let quizScore = 0;
-    let quizData = [];
-    let isAnswering = false;
+    let fcIndex = 0;
+    let qzIdx = 0;
+    let qzScore = 0;
+    let qzList = [];
+    let lockAnswer = false;
 
-    // Flashcard Logic
-    function renderCard() {
-      const current = dataList[cardIdx];
-      document.getElementById('fc-hanzi').innerText = current.hanzi;
-      document.getElementById('fc-pinyin').innerText = current.pinyin;
-      document.getElementById('fc-meaning').innerText = current.meaning;
-      document.getElementById('fc-counter').innerText = `${cardIdx + 1} / ${dataList.length}`;
-      document.getElementById('fc-inner').classList.remove('flipped');
+    // Flashcard Core
+    function updateFC() {
+      const item = dataset[fcIndex];
+      document.getElementById('fc-hanzi').innerText = item.hanzi;
+      document.getElementById('fc-pinyin').innerText = item.pinyin;
+      document.getElementById('fc-meaning').innerText = item.meaning;
+      document.getElementById('counter-text').innerText = `${fcIndex + 1} / ${dataset.length}`;
+      
+      const pct = ((fcIndex + 1) / dataset.length) * 100;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+      document.getElementById('card-3d').classList.remove('flipped');
     }
 
-    function toggleCard() {
-      document.getElementById('fc-inner').classList.toggle('flipped');
+    function flipCard() {
+      document.getElementById('card-3d').classList.toggle('flipped');
     }
 
     function nextCard() {
-      cardIdx = (cardIdx + 1) % dataList.length;
-      renderCard();
+      fcIndex = (fcIndex + 1) % dataset.length;
+      updateFC();
     }
 
     function prevCard() {
-      cardIdx = (cardIdx - 1 + dataList.length) % dataList.length;
-      renderCard();
+      fcIndex = (fcIndex - 1 + dataset.length) % dataset.length;
+      updateFC();
     }
 
     function randomCard() {
-      cardIdx = Math.floor(Math.random() * dataList.length);
-      renderCard();
+      fcIndex = Math.floor(Math.random() * dataset.length);
+      updateFC();
     }
 
-    // Mode Switcher
-    function setMode(mode) {
+    // Switch Screen
+    function switchMode(mode) {
       if (mode === 'fc') {
-        document.getElementById('fc-mode').style.display = 'block';
-        document.getElementById('qz-mode').style.display = 'none';
-        document.getElementById('tab-fc').classList.add('active');
-        document.getElementById('tab-qz').classList.remove('active');
+        document.getElementById('fc-screen').style.display = 'block';
+        document.getElementById('qz-screen').style.display = 'none';
+        document.getElementById('btn-mode-fc').classList.add('active');
+        document.getElementById('btn-mode-qz').classList.remove('active');
+        document.getElementById('progress-text').innerText = 'Kemajuan Pembelajaran';
+        updateFC();
       } else {
-        document.getElementById('fc-mode').style.display = 'none';
-        document.getElementById('qz-mode').style.display = 'block';
-        document.getElementById('tab-qz').classList.add('active');
-        document.getElementById('tab-fc').classList.remove('active');
+        document.getElementById('fc-screen').style.display = 'none';
+        document.getElementById('qz-screen').style.display = 'block';
+        document.getElementById('btn-mode-qz').classList.add('active');
+        document.getElementById('btn-mode-fc').classList.remove('active');
+        document.getElementById('progress-text').innerText = 'Progres Evaluasi';
         initQuiz();
       }
     }
 
-    // Quiz Logic
+    // Quiz Core
     function initQuiz() {
-      quizData = [...dataList].sort(() => 0.5 - Math.random());
-      quizIdx = 0;
-      quizScore = 0;
-      document.getElementById('qz-content').style.display = 'block';
-      document.getElementById('qz-result').style.display = 'none';
-      renderQuestion();
+      qzList = [...dataset].sort(() => 0.5 - Math.random());
+      qzIdx = 0;
+      qzScore = 0;
+      document.getElementById('qz-body').style.display = 'block';
+      document.getElementById('qz-summary').style.display = 'none';
+      renderQz();
     }
 
-    function renderQuestion() {
-      isAnswering = true;
-      const q = quizData[quizIdx];
-      document.getElementById('qz-progress').innerText = `Soal ${quizIdx + 1} / ${quizData.length}`;
-      document.getElementById('qz-hanzi').innerText = q.hanzi;
+    function renderQz() {
+      lockAnswer = false;
+      const current = qzList[qzIdx];
+      document.getElementById('qz-hanzi').innerText = current.hanzi;
+      document.getElementById('counter-text').innerText = `${qzIdx + 1} / ${qzList.length}`;
+      
+      const pct = ((qzIdx + 1) / qzList.length) * 100;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
 
-      const distractors = dataList.filter(d => d.hanzi !== q.hanzi).sort(() => 0.5 - Math.random()).slice(0, 3);
-      const options = [q, ...distractors].sort(() => 0.5 - Math.random());
+      const wrongOpts = dataset.filter(d => d.hanzi !== current.hanzi).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const options = [current, ...wrongOpts].sort(() => 0.5 - Math.random());
 
-      const container = document.getElementById('qz-options');
-      container.innerHTML = '';
+      const grid = document.getElementById('qz-options');
+      grid.innerHTML = '';
 
       options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'btn-option';
+        btn.className = 'qz-option-btn';
         btn.innerText = `${opt.pinyin} — ${opt.meaning}`;
-        btn.onclick = () => handleAnswer(opt.hanzi === q.hanzi, btn);
-        container.appendChild(btn);
+        btn.onclick = () => checkQz(opt.hanzi === current.hanzi, btn);
+        grid.appendChild(btn);
       });
     }
 
-    function handleAnswer(isCorrect, btnElement) {
-      if (!isAnswering) return;
-      isAnswering = false;
+    function checkQz(isCorrect, target) {
+      if (lockAnswer) return;
+      lockAnswer = true;
 
       if (isCorrect) {
-        btnElement.classList.add('correct');
-        quizScore++;
+        target.classList.add('correct');
+        qzScore++;
       } else {
-        btnElement.classList.add('wrong');
+        target.classList.add('wrong');
       }
 
       setTimeout(() => {
-        quizIdx++;
-        if (quizIdx < quizData.length) {
-          renderQuestion();
+        qzIdx++;
+        if (qzIdx < qzList.length) {
+          renderQz();
         } else {
-          document.getElementById('qz-content').style.display = 'none';
-          document.getElementById('qz-result').style.display = 'block';
-          document.getElementById('qz-score-text').innerHTML = `Evaluasi Selesai<br>Skor: ${quizScore} / ${quizData.length}`;
+          document.getElementById('qz-body').style.display = 'none';
+          document.getElementById('qz-summary').style.display = 'block';
+          document.getElementById('qz-score-display').innerHTML = `Evaluasi Selesai!<br><br><span style="color: #fff;">Skor Akhir: ${qzScore} / ${qzList.length}</span>`;
         }
-      }, 800);
+      }, 700);
     }
 
-    renderCard();
+    updateFC();
   </script>
 </body>
 </html>
